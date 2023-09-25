@@ -6,8 +6,11 @@ public class Checker {
      */
 
     // Should first check for how many open and closed curly braces there are
+
     // We can use a stack and push them on and pop them off as we go through the file
+
     // If there are any left on the tack at the end, then we know there is an error
+
     // Or if there are more pops than there are pushes we know there is an error
 
 
