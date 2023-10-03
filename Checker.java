@@ -20,23 +20,33 @@ public class Checker {
         for (String line : lines) {
             // Check for if statements
             if (line.contains("if")) {
-                // Check for curly braces
+                // Check for opening curly braces
                 if (!line.contains("{")) {
                     // Add curly braces
                     line = line.replace(line, line + "{");
-                    //line.replace(line, line + "{");
+                    //writer.write(line + "\n");
+                }
+
+                //  !!!!!!!!!!!!!!!!!! Not done !!!!!!!!!!!!!!!!!!!!! Check for opening curly braces
+
+                // If there is already a { and } add the line to the out file
+   
+            }
+
+            // Check for if-else statements
+            if (line.contains("else")) {
+                // Check for opening curly braces
+                if (!line.contains("{")) {
+                    // Add curly braces
+                    line = line.replace(line, line + "{");
                     writer.write(line + "\n");
                 }
-                // If there is already a { add the line to the out file
-                else {
-                     writer.write(line + "\n");
-                }
+
             }
             // If there are no cases we need to check for add the line to the out file
             else {
                 writer.write(line + "\n");
             }
-            // Check for if-else statements
             // Check for if-else-if statements
             // Check for switch statements
             // Check for curly braces
