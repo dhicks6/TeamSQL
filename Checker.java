@@ -16,15 +16,25 @@ public class Checker {
         // Read in the file using the Driver.java class
         List<String> lines = Files.readAllLines(in.toPath());
         FileWriter writer = new FileWriter(out);
+
         for (String line : lines) {
             // Check for if statements
             if (line.contains("if")) {
                 // Check for curly braces
                 if (!line.contains("{")) {
                     // Add curly braces
-                    line = line + "{";
+                    line = line.replace(line, line + "{");
+                    //line.replace(line, line + "{");
                     writer.write(line + "\n");
                 }
+                // If there is already a { add the line to the out file
+                else {
+                     writer.write(line + "\n");
+                }
+            }
+            // If there are no cases we need to check for add the line to the out file
+            else {
+                writer.write(line + "\n");
             }
             // Check for if-else statements
             // Check for if-else-if statements
@@ -34,7 +44,7 @@ public class Checker {
             // If there are curly braces, check to make sure they are in the right place
             // If they are not in the right place, move them
             // If they are in the right place, do nothing
-                                writer.write(line + "\n");
+            //writer.write(line + "\n");
 
         } // End of for main loop
         // Write the file out

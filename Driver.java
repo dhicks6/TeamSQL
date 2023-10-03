@@ -17,7 +17,7 @@ public class Driver {
 			 while (scanner.hasNextLine())
 			 {
 	            String line = scanner.nextLine();
-	            System.out.println(line);
+	            //System.out.println(line);
 		     }
 		     scanner.close();
 		} catch(Exception e)

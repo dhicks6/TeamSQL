@@ -1,4 +1,4 @@
-public class If {
+public class IfCheck {
 
 
     public static void main(String[] args) {
@@ -13,7 +13,7 @@ public class If {
             System.out.println("Number is less than 20");
         }
 
-        if (number == 10) {
+        if (number == 10) 
             System.out.println("Number is equal to 10");
         }
 
@@ -22,4 +22,3 @@ public class If {
         }
     }
 }
-
