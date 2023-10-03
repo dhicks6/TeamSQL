@@ -27,7 +27,8 @@ public class Checker {
                     //writer.write(line + "\n");
                 }
 
-                //  !!!!!!!!!!!!!!!!!! Not done !!!!!!!!!!!!!!!!!!!!! Check for opening curly braces
+                //  !!!!!!!!!!!!!!!!!! Not done !!!!!!!!!!!!!!!!!!!!! Check for closing curly braces
+
 
                 // If there is already a { and } add the line to the out file
    
