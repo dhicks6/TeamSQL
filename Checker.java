@@ -16,8 +16,9 @@ public class Checker {
         // Read in the file using the Driver.java class
         List<String> lines = Files.readAllLines(in.toPath());
         FileWriter writer = new FileWriter(out);
-
+        int i = 0;
         for (String line : lines) {
+            i++;
             // Check for if statements
             if (line.contains("if")) {
                 // Check for opening curly braces
@@ -26,13 +27,21 @@ public class Checker {
                     line = line.replace(line, line + "{");
                     //writer.write(line + "\n");
                 }
-
                 //  !!!!!!!!!!!!!!!!!! Not done !!!!!!!!!!!!!!!!!!!!! Check for closing curly braces
-   
+                    if (line.contains("{") && !lines.get(i+1).contains("}")) {
+                    System.out.println(line);
+                    System.out.println(i);
+                    System.out.println(lines.get(i));
+                    String tempLine = (line + "\n" + lines.get(i) + "\n" + "} " + lines.get(i+1) + "\n");
+                    //System.out.println(tempLine);
+
+                    lines.set(i+1, "} " + lines.get(i+1));
+                }
+                
             }
 
             // Check for if-else statements
-            if (line.contains("else") && !line.contains("else if")) {
+            if (line.contains("else") && !line.contains("else if") && !line.contains("//")) {
                 // Check for opening curly braces
                 if (!line.contains("{")) {
                     // Add curly braces
@@ -41,11 +50,22 @@ public class Checker {
                 }
             //  !!!!!!!!!!!!!!!!!! Not done !!!!!!!!!!!!!!!!!!!!! Check for closing curly braces
 
+            }
+
+            // Check for else if statements
+            if (line.contains("else if") && !line.contains("else if") && !line.contains("//")) {
+                // Check for opening curly braces
+                if (!line.contains("{")) {
+                    // Add curly braces
+                    line = line.replace(line, line + "{");
+                    //writer.write(line + "\n");
+                }
+            //  !!!!!!!!!!!!!!!!!! Not done !!!!!!!!!!!!!!!!!!!!! Check for closing curly braces
 
             }
 
-            // Check for if-else statements
-            if (line.contains("else if") && !line.contains("else if")) {
+            // Check for switch statements
+            if (line.contains("switch") && !line.contains("//")) {
                 // Check for opening curly braces
                 if (!line.contains("{")) {
                     // Add curly braces
@@ -53,21 +73,14 @@ public class Checker {
                     writer.write(line + "\n");
                 }
             //  !!!!!!!!!!!!!!!!!! Not done !!!!!!!!!!!!!!!!!!!!! Check for closing curly braces
-
-
             }
+
             // If there are no cases we need to check for add the line to the out file
             else {
-                writer.write(line + "\n");
+
+            writer.write(line + "\n");
+                
             }
-            // Check for if-else-if statements
-            // Check for switch statements
-            // Check for curly braces
-            // If there are no curly braces, add them
-            // If there are curly braces, check to make sure they are in the right place
-            // If they are not in the right place, move them
-            // If they are in the right place, do nothing
-            //writer.write(line + "\n");
 
         } // End of for main loop
         // Write the file out
