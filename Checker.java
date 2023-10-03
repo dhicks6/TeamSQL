@@ -25,16 +25,9 @@ public class Checker {
                 if (!line.contains("{")) {
                     // Add curly braces
                     line = line.replace(line, line + "{");
-                    //writer.write(line + "\n");
                 }
-                //  !!!!!!!!!!!!!!!!!! Not done !!!!!!!!!!!!!!!!!!!!! Check for closing curly braces
+                // Check for closing curly braces
                     if (line.contains("{") && !lines.get(i+1).contains("}")) {
-                    System.out.println(line);
-                    System.out.println(i);
-                    System.out.println(lines.get(i));
-                    String tempLine = (line + "\n" + lines.get(i) + "\n" + "} " + lines.get(i+1) + "\n");
-                    //System.out.println(tempLine);
-
                     lines.set(i+1, "} " + lines.get(i+1));
                 }
                 
@@ -46,10 +39,11 @@ public class Checker {
                 if (!line.contains("{")) {
                     // Add curly braces
                     line = line.replace(line, line + "{");
-                    //writer.write(line + "\n");
                 }
             //  !!!!!!!!!!!!!!!!!! Not done !!!!!!!!!!!!!!!!!!!!! Check for closing curly braces
-
+                if (line.contains("{") && !lines.get(i+1).contains("}")) {
+                    lines.set(i+1, "} " + lines.get(i+1));
+                }
             }
 
             // Check for else if statements
@@ -58,10 +52,11 @@ public class Checker {
                 if (!line.contains("{")) {
                     // Add curly braces
                     line = line.replace(line, line + "{");
-                    //writer.write(line + "\n");
                 }
             //  !!!!!!!!!!!!!!!!!! Not done !!!!!!!!!!!!!!!!!!!!! Check for closing curly braces
-
+                if (line.contains("{") && !lines.get(i+1).contains("}")) {
+                    lines.set(i+1, "} " + lines.get(i+1));
+                }
             }
 
             // Check for switch statements
@@ -77,12 +72,10 @@ public class Checker {
 
             // If there are no cases we need to check for add the line to the out file
             else {
-
             writer.write(line + "\n");
-                
             }
 
-        } // End of for main loop
+        } // End of for loop
         // Write the file out
         writer.close();
     } // End of IfCheck method

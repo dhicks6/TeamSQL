@@ -22,18 +22,18 @@ public class IfCheck {
 
         if (number % 2 == 0) {
             System.out.println("Number is even");
-         else {
+         else 
             System.out.println("Number is odd");
         }
 
 
         if (number < 5) {
             System.out.println("Number is less than 5");
-        } else if (number >= 5 && number <= 15) {
+        } else if (number >= 5 && number <= 15) 
             System.out.println("Number is between 5 and 15 (inclusive)");
-        } else {
+         else {
             System.out.println("Number is greater than 15");
-        }
+        
 
         // Using a switch statement
         switch (number) 
