@@ -28,20 +28,32 @@ public class Checker {
                 }
 
                 //  !!!!!!!!!!!!!!!!!! Not done !!!!!!!!!!!!!!!!!!!!! Check for closing curly braces
-
-
-                // If there is already a { and } add the line to the out file
    
             }
 
             // Check for if-else statements
-            if (line.contains("else")) {
+            if (line.contains("else") && !line.contains("else if")) {
+                // Check for opening curly braces
+                if (!line.contains("{")) {
+                    // Add curly braces
+                    line = line.replace(line, line + "{");
+                    //writer.write(line + "\n");
+                }
+            //  !!!!!!!!!!!!!!!!!! Not done !!!!!!!!!!!!!!!!!!!!! Check for closing curly braces
+
+
+            }
+
+            // Check for if-else statements
+            if (line.contains("else if") && !line.contains("else if")) {
                 // Check for opening curly braces
                 if (!line.contains("{")) {
                     // Add curly braces
                     line = line.replace(line, line + "{");
                     writer.write(line + "\n");
                 }
+            //  !!!!!!!!!!!!!!!!!! Not done !!!!!!!!!!!!!!!!!!!!! Check for closing curly braces
+
 
             }
             // If there are no cases we need to check for add the line to the out file
