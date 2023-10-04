@@ -35,7 +35,6 @@ public class IfCheck {
             System.out.println("Number is greater than 15");
         
 
-        // Using a switch statement
         switch (number) 
             case 5:
                 System.out.println("Number is exactly 5");
@@ -48,6 +47,6 @@ public class IfCheck {
                 break;
             default:
                 System.out.println("Number is something other than 5, 10, or 15");
-        }
+        
     }
 }
