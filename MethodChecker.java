@@ -92,6 +92,7 @@ public class MethodChecker {
 			{
 				fileContent.set(futureLine - 1,
 						fileContent.get(futureLine - 1) + ")");
+				break;
 			}
 			
 		}
