@@ -63,19 +63,33 @@ public class MethodCheckerTest {
 	}
 	
 	@Test
+	public void recognizeNotMethodStart5()
+	{
+		 boolean method = checker.checkIfMethodDec("    if(number)");
+		 assertFalse(method);
+	}
+	
+	@Test
+	public void recognizeNotMethodStart4()
+	{
+		 boolean method = checker.checkIfMethodDec("    if (number)");
+		 assertFalse(method);
+	}
+	
+	@Test
 	public void testFixLineNoFixNeeded()
 	{
 		String input = "public static void getStuff()";
-		String newLine = checker.fixLine(input);
+		String newLine = checker.fixHeader(input);
 		assertEquals(input, newLine);
 	}
 	
 	@Test
 	public void testFixLinePublic()
 	{
-		String input = "pulc static void getStuff()";
-		String expected = "public static void getStuff()";
-		String newLine = checker.fixLine(input);
+		String input = "	pulc static void getStuff()";
+		String expected = "	public static void getStuff()";
+		String newLine = checker.fixHeader(input);
 		assertEquals(expected, newLine);
 	}
 	
@@ -84,7 +98,7 @@ public class MethodCheckerTest {
 	{
 		String input = "public s void getStuff()";
 		String expected = "public static void getStuff()";
-		String newLine = checker.fixLine(input);
+		String newLine = checker.fixHeader(input);
 		assertEquals(expected, newLine);
 	}
 	
@@ -93,7 +107,7 @@ public class MethodCheckerTest {
 	{
 		String input = "public static 64Points 100getStuff()";
 		String expected = "public static Points getStuff()";
-		String newLine = checker.fixLine(input);
+		String newLine = checker.fixHeader(input);
 		assertEquals(expected, newLine);
 	}
 }

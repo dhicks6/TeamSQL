@@ -1,37 +1,171 @@
+import java.util.ArrayList;
+import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 // Assume program is indented correctly
 // Assume program is indented with tabs or equivalently four spaces
 // Assume no return type or method name is made of all numbers.
-// Assume method declaration is one line
+// Assume method declaration will always have a beginning open parantheses (
 public class MethodChecker {
 	
-	public String checkLine(String line)
+	public ArrayList<String> checkMethods(ArrayList<String> fileContent)
 	{
-		if(!checkIfMethodDec(line))
+		for (int lineNum = 0; lineNum < fileContent.size(); lineNum++)
 		{
-			return line;
+			String line = fileContent.get(lineNum);
+			if (checkIfMethodDec(line))
+			{
+				String whiteSpaces = getWhiteSpaces(line);
+				fileContent.set(lineNum, fixHeader(line));
+				fileContent = fixParantheses(fileContent, lineNum);
+				fileContent = fixBrackets(fileContent, lineNum, whiteSpaces);			
+			}
 		}
-		else
+		return fileContent;
+	}
+	
+	private ArrayList<String> fixBrackets(ArrayList<String> fileContent,
+							int currentLine,
+							String whiteSpaces)
+	{
+		boolean openBracketPlaced = false;
+		boolean closeBracketPlaced = false;
+		
+		for (int futureLine = currentLine+1;
+				futureLine < fileContent.size();
+				futureLine++)
 		{
-			fixLine(line);
+			String line = fileContent.get(futureLine);
+			if (!openBracketPlaced)
+			{
+				if (checkOpenBracket(fileContent.get(futureLine)))
+				{
+					openBracketPlaced = true;
+				}
+				else if(!checkOpenBracket(fileContent.get(futureLine))
+						&& checkClosingParantheses(fileContent.get(futureLine -1)))
+				{
+					fileContent.add(futureLine, whiteSpaces + "{");
+					openBracketPlaced = true;
+				}
+			}
+			
+			if (!closeBracketPlaced)
+			{
+				if (checkCloseBracket(fileContent.get(futureLine), whiteSpaces))
+				{
+					closeBracketPlaced = true;
+				}
+				else if(!checkCloseBracket(fileContent.get(futureLine), whiteSpaces)
+						&& !checkClosingParantheses(fileContent.get(futureLine))
+						&& !checkCloseBracket(fileContent.get(futureLine+1), whiteSpaces)
+						&& checkMatchingScope(fileContent.get(futureLine+1), whiteSpaces))
+				{
+					fileContent.add(futureLine+1,
+									whiteSpaces + "}");
+					closeBracketPlaced = true;
+				}
+			}
+			if (openBracketPlaced && closeBracketPlaced)
+			{
+				break;
+			}
 		}
-		return "TODO";
+		return fileContent;
+	}
+	
+	private ArrayList<String> fixParantheses(ArrayList<String> fileContent,
+			                                int currentLine)
+	{
+		for (int futureLine = currentLine;
+				futureLine < fileContent.size();
+				futureLine++)
+		{
+			if (checkClosingParantheses(fileContent.get(futureLine)))
+			{
+				break;
+			}
+			if ((futureLine > currentLine
+				&& checkIfMethodDec(fileContent.get(futureLine)))
+				|| checkOpenBracket(fileContent.get(futureLine)))
+			{
+				fileContent.set(futureLine - 1,
+						fileContent.get(futureLine - 1) + ")");
+			}
+			
+		}
+		return fileContent;
+	}
+	
+	private boolean checkClosingParantheses(String line)
+	{
+		String closingParantheses = "[)]$";
+		Pattern closingPara = Pattern.compile(closingParantheses);
+		Matcher closingParaMatcher = closingPara.matcher(line);	
+		if (closingParaMatcher.find())
+		{
+			return true;
+		}
+		return false;
+	}
+	
+	private boolean checkOpenBracket(String line)
+	{
+		String openBracket = "^\s+[{]";
+		Pattern openBracketPattern = Pattern.compile(openBracket);
+		Matcher openBracketMatcher = openBracketPattern.matcher(line);	
+		if (openBracketMatcher.find())
+		{
+			return true;
+		}
+		return false;
+	}
+	
+	private boolean checkCloseBracket(String line, String whiteSpaces)
+	{
+		String whiteSpace = translateWhiteSpaceRegex(whiteSpaces);
+		String closeBracket = whiteSpace+"[}]$";
+		Pattern closeBracketPattern = Pattern.compile(closeBracket);
+		Matcher closeBracketMatcher = closeBracketPattern.matcher(line);	
+		if (closeBracketMatcher.find())
+		{
+			return true;
+		}
+		return false;
+	}
+	
+	private boolean checkMatchingScope(String line, String whiteSpaces)
+	{
+		String whiteSpacesRegex = translateWhiteSpaceRegex(whiteSpaces);
+		String scope = "^"+whiteSpacesRegex+"\\S+";
+		Pattern scopePattern = Pattern.compile(scope);
+		Matcher scopeMatcher = scopePattern.matcher(line);	
+		if (scopeMatcher.find())
+		{
+			return true;
+		}
+		return false;
 	}
 	
 	public boolean checkIfMethodDec(String line)
 	{
+		String methodForm = "\\S+\s\\S+[(]";
+		Pattern methodPattern = Pattern.compile(methodForm);
+		Matcher methodMatcher = methodPattern.matcher(line);
 		// Method names are preceded by tab or spaces
-				// <public|private|protected> <static> <return type> <methodname>
-		if (line.contains("="))
+		// <public|private|protected> <static> <return type> <methodname>
+		if (line.contains("=")
+			|| line.contains("\"")
+			|| line.contains("\'"))
 		{
 			return false;
 		}
-		if (line.contains("(") && line.contains(")"))
+		if (methodMatcher.find())
 		{
 			String[] elements = line.trim().split("\s+");
-			if (elements.length == 4)
+			if (elements.length == 4 ||
+				elements.length == 5)
 			{
 				return true;
 			}
@@ -48,10 +182,10 @@ public class MethodChecker {
 		return false;
 	}
 	
-	public String fixLine(String line)
+	public String fixHeader(String line)
 	{
 		String[] elements = line.trim().split("\s+");
-		String newLine = "";
+		String newLine = getWhiteSpaces(line);
 		if (elements.length == 4)
 		{
 			elements[0] = fixElement1(elements[0]);
@@ -125,5 +259,39 @@ public class MethodChecker {
 				element = "public";
 			}
 		return element;
+	}
+	
+	private String getWhiteSpaces(String line)
+	{
+		String whiteSpaces = "";
+		for( char character : line.toCharArray())
+		{
+			if(character == ' ' || character == '\t')
+			{
+				whiteSpaces = whiteSpaces + character;
+			}
+			else
+			{
+				break;
+			}
+		}
+		return whiteSpaces;
+	}
+	
+	private String translateWhiteSpaceRegex(String whiteSpace)
+	{
+		String whiteSpaceRegex = "";
+		for(char character : whiteSpace.toCharArray())
+		{
+			if (character == '\t')
+			{
+				whiteSpaceRegex = whiteSpaceRegex + "\t";
+			}
+			if (character == ' ')
+			{
+				whiteSpaceRegex = whiteSpaceRegex + "\s";
+			}
+		}
+		return whiteSpaceRegex;
 	}
 }
