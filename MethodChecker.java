@@ -259,8 +259,8 @@ public class MethodChecker {
 	private String fixElement1(String element)
 	{
 		if (!element.equals("public")
-				|| !element.equals("private")
-				|| !element.equals("protected"))
+				&& !element.equals("private")
+				&& !element.equals("protected"))
 			{
 				element = "public";
 			}
