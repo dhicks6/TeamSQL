@@ -197,6 +197,10 @@ public class MethodChecker {
 		if (methodMatcher.find())
 		{
 			String[] elements = line.trim().split("\s+");
+			if (elements[0].contains("("))
+			{
+				return false;
+			}
 			if (elements.length == 4 ||
 				elements.length == 5)
 			{
