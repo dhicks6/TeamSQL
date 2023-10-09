@@ -9,6 +9,12 @@ import java.util.regex.Pattern;
 // Assume method declaration will always have a beginning open parantheses (
 public class MethodChecker {
 	
+	/**
+	 * Begins the process of checking java method headers, parentheses,
+	 * and brackets
+	 * @param fileContent String array containing contents of file
+	 * @return a String[] of fixed contents
+	 */
 	public ArrayList<String> checkMethods(ArrayList<String> fileContent)
 	{
 		for (int lineNum = 0; lineNum < fileContent.size(); lineNum++)
@@ -56,6 +62,12 @@ public class MethodChecker {
 				if (checkCloseBracket(fileContent.get(futureLine), whiteSpaces))
 				{
 					closeBracketPlaced = true;
+				}
+				else if (checkIfExitScope(fileContent.get(futureLine+1), whiteSpaces))
+				{
+					fileContent.add(futureLine+1,
+							whiteSpaces + "}");
+			        closeBracketPlaced = true;
 				}
 				else if(!checkCloseBracket(fileContent.get(futureLine), whiteSpaces)
 						&& !checkClosingParantheses(fileContent.get(futureLine))
@@ -149,6 +161,26 @@ public class MethodChecker {
 		return false;
 	}
 	
+	private boolean checkIfExitScope (String line, String currentScopeWhiteSpace)
+	{
+		if (currentScopeWhiteSpace.charAt(0) == '\t')
+		{
+			currentScopeWhiteSpace = currentScopeWhiteSpace.substring(1);
+		}
+		else if (currentScopeWhiteSpace.charAt(0) == ' ')
+		{
+			currentScopeWhiteSpace = currentScopeWhiteSpace.substring(4);
+		}
+		String whiteSpaceRegex = translateWhiteSpaceRegex(currentScopeWhiteSpace);
+		Pattern whiteSpacePat = Pattern.compile("^"+whiteSpaceRegex+"\\S");
+		Matcher whiteSpaceMat = whiteSpacePat.matcher(line);
+		if (whiteSpaceMat.find())
+		{
+			return true;
+		}
+		return false;
+	}
+	
 	public boolean checkIfMethodDec(String line)
 	{
 		String methodForm = "\\S+\s\\S+[(]";
@@ -165,6 +197,10 @@ public class MethodChecker {
 		if (methodMatcher.find())
 		{
 			String[] elements = line.trim().split("\s+");
+			if (elements[0].contains("("))
+			{
+				return false;
+			}
 			if (elements.length == 4 ||
 				elements.length == 5)
 			{
@@ -223,8 +259,8 @@ public class MethodChecker {
 	private String fixElement1(String element)
 	{
 		if (!element.equals("public")
-				|| !element.equals("private")
-				|| !element.equals("protected"))
+				&& !element.equals("private")
+				&& !element.equals("protected"))
 			{
 				element = "public";
 			}
@@ -247,15 +283,21 @@ public class MethodChecker {
 			element = element.substring(1);
 		}
 		
+		if (Character.isUpperCase(element.charAt(0)))
+		{
+			char letter= Character.toLowerCase(element.charAt(0));
+			element = letter + element.substring(1);
+		}
+		
 		return element;
 	}
 	
 	private String fixElement4(String element)
 	{
 		if (!element.equals("public")
-				|| !element.equals("private")
-				|| !element.equals("protected")
-				|| !element.equals("static"))
+				&& !element.equals("private")
+				&& !element.equals("protected")
+				&& !element.equals("static"))
 			{
 				element = "public";
 			}
@@ -286,11 +328,11 @@ public class MethodChecker {
 		{
 			if (character == '\t')
 			{
-				whiteSpaceRegex = whiteSpaceRegex + "\t";
+				whiteSpaceRegex = whiteSpaceRegex + '\t';
 			}
 			if (character == ' ')
 			{
-				whiteSpaceRegex = whiteSpaceRegex + "\s";
+				whiteSpaceRegex = whiteSpaceRegex + '\s';
 			}
 		}
 		return whiteSpaceRegex;
