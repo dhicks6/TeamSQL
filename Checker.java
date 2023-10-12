@@ -91,7 +91,7 @@ public class Checker {
         } // End of for loop
         // Write to fixed array
         for (String line : in) {
-            fixedArray.add(line);
+            fixedArray.add(line + "\n");
         }
         return fixedArray;
     } // End of IfCheck method
