@@ -23,4 +23,5 @@ public class Driver {
         e.printStackTrace();
       }
     }
+    Checker.IfCheck(fileContents);
 }

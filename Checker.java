@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Checker {
@@ -11,12 +12,17 @@ public class Checker {
      appropriately. If not, fix it. Assume that single statement block is also required to include
      curly braces.
      */
-    public static void IfCheck(File in, File out) throws IOException {
+
+     // Need to update IfCheck to take an arraylist of strings and return an arraylist of strings that are
+     // all of the changes made by IfCheck
+    public static ArrayList<String> IfCheck(ArrayList<String> in) throws IOException {
+
+        ArrayList<String> fixedArray = new ArrayList<String>();
+
         // Read in the file using the Driver.java class
-        List<String> lines = Files.readAllLines(in.toPath());
-        FileWriter writer = new FileWriter(out);
+
         int i = 0;
-        for (String line : lines) {
+        for (String line : in) {
             i++;
             // Check for if statements
             if (line.contains("if")) {
@@ -26,8 +32,8 @@ public class Checker {
                     line = line.replace(line, line + "{");
                 }
                 // Check for closing curly braces
-                    if (line.contains("{") && !lines.get(i+1).contains("}")) {
-                    lines.set(i+1, "} " + lines.get(i+1));
+                    if (line.contains("{") && !in.get(i+1).contains("}")) {
+                    in.set(i+1, "} " + in.get(i+1));
                 }
                 
             }
@@ -40,8 +46,8 @@ public class Checker {
                     line = line.replace(line, line + "{");
                 }
             //  Check for closing curly braces
-                if (line.contains("{") && !lines.get(i+1).contains("}")) {
-                    lines.set(i+1, "} " + lines.get(i+1));
+                if (line.contains("{") && !in.get(i+1).contains("}")) {
+                    in.set(i+1, "} " + in.get(i+1));
                 }
             }
 
@@ -53,8 +59,8 @@ public class Checker {
                     line = line.replace(line, line + "{");
                 }
             //  Check for closing curly braces
-                if (line.contains("{") && !lines.get(i+1).contains("}")) {
-                    lines.set(i+1, "} " + lines.get(i+1));
+                if (line.contains("{") && !in.get(i+1).contains("}")) {
+                    in.set(i+1, "} " + in.get(i+1));
                 }
             }
 
@@ -62,8 +68,8 @@ public class Checker {
             // Here I am going to have to find default and fix the ending curly brace 2 lines down
             // I did this one backwards so I wouldn't need to have the else statement after this one
             // because the writer.write statement wouldnt work in this if statement
-            if (line.contains("default") && !lines.get(i+1).contains("}")) {
-                lines.set(i+1, "} " + lines.get(i+1));
+            if (line.contains("default") && !in.get(i+1).contains("}")) {
+                in.set(i+1, "} " + in.get(i+1));
             }
 
             // Check for switch statements
@@ -72,40 +78,24 @@ public class Checker {
                 if (!line.contains("{")) {
                     // Add curly braces
                     line = line.replace(line, line + "{");
-                    writer.write(line + "\n");
+                    //writer.write(line + "\n");
                 }
             }
 
             // If there are no cases we need to check for add the line to the out file
             else {
-            writer.write(line + "\n");
+            
+            //writer.write(line + "\n");
             }
 
         } // End of for loop
-        // Write the file out
-        writer.close();
+        // Write to fixed array
+        for (String line : in) {
+            fixedArray.add(line);
+        }
+        return fixedArray;
     } // End of IfCheck method
 
 
-    /*
-    2. Check to make sure all loop structures (while, do-while, for) use curly braces
-    appropriately. If not, fix it. Assume that single statement block is also required to include
-    curly braces
-     */
-
-    /*
-    3. Check to make sure all the method structure is syntactically correct. If not, fix it.
-     */
-
-
-    /*
-    4. Count how many time the keyword public is used as keywords in the input program.
-     */
-
-
-    /*
-    5. Then your program will print to a text file the original input program, the updated input
-    program, and the number of time keyword print is used.
-     */
 
 } // End of Checker class
