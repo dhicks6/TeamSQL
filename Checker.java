@@ -1,9 +1,5 @@
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.List;
+
 
 public class Checker {
         
@@ -15,7 +11,7 @@ public class Checker {
 
      // Need to update IfCheck to take an arraylist of strings and return an arraylist of strings that are
      // all of the changes made by IfCheck
-    public static ArrayList<String> IfCheck(ArrayList<String> in) throws IOException {
+    public static ArrayList<String> IfCheck(ArrayList<String> in) {
 
         ArrayList<String> fixedArray = new ArrayList<String>();
 
