@@ -258,7 +258,10 @@ public class MethodChecker {
 	
 	public String fixHeader(String line)
 	{
-		String[] elements = line.trim().split("\s+");
+		String headerParts= line.substring(0, line.indexOf("("));
+		String restOfLine = line.substring(line.indexOf("("))
+				.replace("\n","");
+		String[] elements = headerParts.trim().split("\s+");
 		String newLine = getWhiteSpaces(line);
 		if (elements.length == 4)
 		{
@@ -290,7 +293,7 @@ public class MethodChecker {
 				newLine = newLine.concat(element);
 			}	
 		}
-		return newLine;
+		return newLine.concat(restOfLine);
 	}
 	
 	private String fixElement1(String element)

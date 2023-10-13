@@ -12,7 +12,7 @@ import java.util.Scanner;
 public class KeywordCounter {
     public static void main(String[] args) {
         // Add the file path  
-        String filePath = "Test.java";
+        String filePath = "TeamSQL/Test.java";
         // Scan and split the files in to an ArrayList
         ArrayList<String> lines = readFile(filePath);
         // Calling method 
@@ -88,6 +88,7 @@ public class KeywordCounter {
 
             scanner.close();
             inComment = false;
+            inQuotes = false;
         }
 
         return count;
