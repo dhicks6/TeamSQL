@@ -24,7 +24,7 @@ public class MethodChecker {
 			{
 				String whiteSpaces = getWhiteSpaces(line);
 				fileContent.set(lineNum, fixHeader(line));
-				fileContent = fixParantheses(fileContent, lineNum);
+				fileContent = fixParantheses(fileContent, lineNum, whiteSpaces);
 				fileContent = fixBrackets(fileContent, lineNum, whiteSpaces);			
 			}
 		}
@@ -56,25 +56,27 @@ public class MethodChecker {
 					openBracketPlaced = true;
 				}
 			}
-			
+			if (line.isBlank())
+			{
+				continue;
+			}
 			if (!closeBracketPlaced)
 			{
 				if (checkCloseBracket(fileContent.get(futureLine), whiteSpaces))
 				{
 					closeBracketPlaced = true;
 				}
-				else if (checkIfExitScope(fileContent.get(futureLine+1), whiteSpaces))
+				else if (checkIfExitScope(fileContent.get(futureLine), whiteSpaces))
 				{
-					fileContent.add(futureLine+1,
+					fileContent.add(futureLine,
 							whiteSpaces + "}");
 			        closeBracketPlaced = true;
 				}
-				else if(!checkCloseBracket(fileContent.get(futureLine), whiteSpaces)
-						&& !checkClosingParantheses(fileContent.get(futureLine))
-						&& !checkCloseBracket(fileContent.get(futureLine+1), whiteSpaces)
-						&& checkMatchingScope(fileContent.get(futureLine+1), whiteSpaces))
+				else if(checkMatchingScope(fileContent.get(futureLine), whiteSpaces)
+						&& !checkCloseBracket(fileContent.get(futureLine), whiteSpaces)
+						&& !checkOpenBracket(fileContent.get(futureLine)))
 				{
-					fileContent.add(futureLine+1,
+					fileContent.add(futureLine,
 									whiteSpaces + "}");
 					closeBracketPlaced = true;
 				}
@@ -88,19 +90,34 @@ public class MethodChecker {
 	}
 	
 	private ArrayList<String> fixParantheses(ArrayList<String> fileContent,
-			                                int currentLine)
+			                                int currentLine,
+			                                String whiteSpaces)
 	{
 		for (int futureLine = currentLine;
 				futureLine < fileContent.size();
 				futureLine++)
 		{
+			if (fileContent.get(futureLine).isBlank())
+			{
+				continue;
+			}
 			if (checkClosingParantheses(fileContent.get(futureLine)))
 			{
 				break;
 			}
-			if ((futureLine > currentLine
-				&& checkIfMethodDec(fileContent.get(futureLine)))
-				|| checkOpenBracket(fileContent.get(futureLine)))
+			else if (fileContent.get(futureLine).contains("(") &&
+					 fileContent.get(futureLine).endsWith("("))
+			{
+				fileContent.set(futureLine, fileContent.get(futureLine)+")");
+			}
+			else if (checkOpenBracket(fileContent.get(futureLine)))
+			{
+				fileContent.set(futureLine - 1,
+						fileContent.get(futureLine - 1) + ")");
+				break;
+			}
+			else if (checkIfExitScope(fileContent.get(futureLine), whiteSpaces)
+					 || checkIfNextScope(fileContent.get(futureLine), whiteSpaces))
 			{
 				fileContent.set(futureLine - 1,
 						fileContent.get(futureLine - 1) + ")");
@@ -181,8 +198,28 @@ public class MethodChecker {
 		return false;
 	}
 	
+	private boolean checkIfNextScope(String line, String currentScopeWhiteSpaces)
+	{
+		String nextScopeTab = "^"+currentScopeWhiteSpaces+"\t\\S+";
+		String nextScopeSpaces= "^"+currentScopeWhiteSpaces+"\s\s\s\s\\S+";
+		Pattern nextScopeTabPat = Pattern.compile(nextScopeTab);
+		Pattern nextScopeSpacePat = Pattern.compile(nextScopeSpaces);
+		Matcher nextScopeTabMatch = nextScopeTabPat.matcher(line);
+		Matcher nextScopeSpaceMatch = nextScopeSpacePat.matcher(line);
+		if (nextScopeTabMatch.find())
+		{
+			return true;
+		}
+		if (nextScopeSpaceMatch.find())
+		{
+			return true;
+		}
+		return false;
+	}
+	
 	public boolean checkIfMethodDec(String line)
 	{
+		// aaaa aaaa(
 		String methodForm = "\\S+\s\\S+[(]";
 		Pattern methodPattern = Pattern.compile(methodForm);
 		Matcher methodMatcher = methodPattern.matcher(line);
@@ -221,7 +258,10 @@ public class MethodChecker {
 	
 	public String fixHeader(String line)
 	{
-		String[] elements = line.trim().split("\s+");
+		String headerParts= line.substring(0, line.indexOf("("));
+		String restOfLine = line.substring(line.indexOf("("))
+				.replace("\n","");
+		String[] elements = headerParts.trim().split("\s+");
 		String newLine = getWhiteSpaces(line);
 		if (elements.length == 4)
 		{
@@ -253,7 +293,7 @@ public class MethodChecker {
 				newLine = newLine.concat(element);
 			}	
 		}
-		return newLine;
+		return newLine.concat(restOfLine);
 	}
 	
 	private String fixElement1(String element)
