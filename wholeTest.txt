@@ -1,0 +1,83 @@
+class HelloWorld {
+    public static void main(String[] args) {
+        String x = "Dog";
+        if (x.equal("Dog"))
+	{
+	    System.out.println("You got a {Dog}");
+	    System.out.println("You got a animal(Dog)");
+            getStuff( lookatStuff());
+	}
+        if (number > 5) {
+            System.out.println("Number is greater than 5");
+
+        if (number < 20) 
+            System.out.println("Number is less than 20");
+        }
+    }
+
+    public 24void 24getStuff(
+    {
+        if (number % 2 == 0) {
+            System.out.println("Number is even");
+	else 
+            System.out.println("Number is odd");
+        }
+    }
+
+    pc stc void getName()
+    {
+    }
+
+    void getOtherStuff(
+        switch (number)
+            case 5:
+                System.out.println("Number is exactly 5");
+		break;
+            case 10:
+                System.out.println("Number is exactly 10");
+                break;
+            case 15:
+                System.out.println("Number is exactly 15");
+                break;
+            default:
+                System.out.println("Number is something other than 5, 10, or 15");
+
+    void setStuff(String stuff,
+                  int number)
+    {
+        int stuff = 2;
+
+    public void getLotsStuff()
+    {
+
+    }
+
+    private void GetPrivate()
+    {
+    
+
+    public class InnerClass
+    {
+        pc st void getInnerStuff()
+        {
+
+        }
+
+        35void 27getOtherInnerStuff()
+
+        }
+
+        static void removeStuff(int stuff1,
+                                String stuff2,
+                                List stuff3
+        {
+
+        }
+
+        void setInnerStuff(String stuff,
+                           int number)
+        {
+            int innerStuff = 2;
+        
+    }
+}
