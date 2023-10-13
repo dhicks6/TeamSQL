@@ -29,7 +29,7 @@ public class Checker {
                 }
                 // Check for closing curly braces
                     if (line.contains("{") && !in.get(i+1).contains("}")) {
-                    in.set(i+1, "} " + in.get(i+1));
+                    in.set(i+1, "        } " + in.get(i+1));
                 }
                 
             }
@@ -43,7 +43,7 @@ public class Checker {
                 }
             //  Check for closing curly braces
                 if (line.contains("{") && !in.get(i+1).contains("}")) {
-                    in.set(i+1, "} " + in.get(i+1));
+                    in.set(i+1, "        } " + in.get(i+1));
                 }
             }
 
@@ -56,7 +56,7 @@ public class Checker {
                 }
             //  Check for closing curly braces
                 if (line.contains("{") && !in.get(i+1).contains("}")) {
-                    in.set(i+1, "} " + in.get(i+1));
+                    in.set(i+1, "       } " + in.get(i+1));
                 }
             }
 
@@ -65,7 +65,7 @@ public class Checker {
             // I did this one backwards so I wouldn't need to have the else statement after this one
             // because the writer.write statement wouldnt work in this if statement
             if (line.contains("default") && !in.get(i+1).contains("}")) {
-                in.set(i+1, "} " + in.get(i+1));
+                in.set(i+1, "        } " + in.get(i+1));
             }
 
             // Check for switch statements
