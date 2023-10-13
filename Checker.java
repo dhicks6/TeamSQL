@@ -26,6 +26,7 @@ public class Checker {
                 if (!line.contains("{")) {
                     // Add curly braces
                     line = line.replace(line, line + "{");
+                    in.set(i-1, line);
                 }
                 // Check for closing curly braces
                     if (line.contains("{") && !in.get(i+1).contains("}")) {
@@ -69,11 +70,12 @@ public class Checker {
             }
 
             // Check for switch statements
-            if (line.contains("switch") && !line.contains("//")) {
+            if (line.contains("switch") ) {
                 // Check for opening curly braces
                 if (!line.contains("{")) {
                     // Add curly braces
                     line = line.replace(line, line + "{");
+                    in.set(i-1, line);
                     //writer.write(line + "\n");
                 }
             }
