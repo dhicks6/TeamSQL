@@ -8,33 +8,35 @@ public class loopCount {
         int loopCount = 0;
 
         try {
-            File filePath = new File("C:/Users/spx98/Downloads/Test.java");
+            File filePath = new File("Test.java");
             Scanner file = new Scanner(filePath);
 
             // Create a StringBuilder to store the fixed code
             StringBuilder fixedCode = new StringBuilder();
 
             boolean insideLoop = false;
+            boolean openingBraceFound = false;
 
             // Scan each line in the file
             while (file.hasNextLine()) {
                 String line = file.nextLine();
 
-                // Check for 'for', 'while', and 'do' loop keywords
+                // Check for 'for (', 'while (', and 'do {'
                 if (line.contains("for (") || line.contains("while (") || line.contains("do {")) {
                     loopCount++;
                     insideLoop = true;
-
-                    // Check if the line is missing "{"
-                    if (!line.contains("{")) {
-                        // Add "{" after the loop declaration
-                        line = line.replace("(", " {\n");
-                    }
                 }
 
-                // Check for the end of a loop
-                if (insideLoop && line.contains("}")) {
-                    insideLoop = false;
+                if (openingBraceFound) {
+                    if (line.contains("{")) {
+                        openingBraceFound = true;
+                    } else {
+                        // Check if the line is missing "{"
+                        if (insideLoop) {
+                            line = line + " {";
+                            openingBraceFound = true;
+                        }
+                    }
                 }
 
                 // Append the line to the fixed code
@@ -42,6 +44,11 @@ public class loopCount {
             }
 
             file.close();
+
+            // Add a closing curly brace '}' at the end of each loop if it's missing
+            if (!insideLoop) {
+                fixedCode.append("}\n");
+            }
 
             // Write the fixed code back to the same file
             FileWriter fileWriter = new FileWriter(filePath);
