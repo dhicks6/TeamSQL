@@ -49,7 +49,16 @@ class HelloWorld {
 
     public void getLotsStuff()
     {
-
+	    // Assertion: p must be in the list.
+	    for (int i = 1; i <= allProfiles.getLength(); i++)
+            
+				allProfiles.getEntry(i).removeFriend(p);
+        }
+        
+		for (int i = 1; i <= allProfiles.getLength() && foundIndex == -1; i++)
+		{
+			foundIndex = i;
+	
     }
 
     private void GetPrivate()

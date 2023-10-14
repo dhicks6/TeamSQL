@@ -1,65 +1,73 @@
-package project;
-
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class loopCount {
-    public static void main(String[] args) {
-        int loopCount = 0;
-
+    public static void main(String[] args) 
+    {
+    	
+    	 // Add the file path  
+        String filePath = "TeamSQL/TestLoops.java";
+        File file = new File(filePath);
+        // Scan and split the files in to an ArrayList
+        ArrayList<String> fileContents = new ArrayList<>();
+        // Calling method 
         try {
-            File filePath = new File("Test.java");
-            Scanner file = new Scanner(filePath);
-
-            // Create a StringBuilder to store the fixed code
-            StringBuilder fixedCode = new StringBuilder();
-
-            boolean insideLoop = false;
-            boolean openingBraceFound = false;
-
-            // Scan each line in the file
-            while (file.hasNextLine()) {
-                String line = file.nextLine();
-
-                // Check for 'for (', 'while (', and 'do {'
-                if (line.contains("for (") || line.contains("while (") || line.contains("do {")) {
-                    loopCount++;
-                    insideLoop = true;
-                }
-
-                if (openingBraceFound) {
-                    if (line.contains("{")) {
-                        openingBraceFound = true;
-                    } else {
-                        // Check if the line is missing "{"
-                        if (insideLoop) {
-                            line = line + " {";
-                            openingBraceFound = true;
-                        }
-                    }
-                }
-
-                // Append the line to the fixed code
-                fixedCode.append(line).append("\n");
+            Scanner scanner = new Scanner(file);
+            // Scan and add each line to ArrayList
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                fileContents.add(line);
             }
 
-            file.close();
+            scanner.close();
 
-            // Add a closing curly brace '}' at the end of each loop if it's missing
-            if (!insideLoop) {
-                fixedCode.append("}\n");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        ArrayList<String> newArray = checkLoops(fileContents);
+    }
+    
+    public static ArrayList<String> checkLoops(ArrayList<String> fileContents)
+    {
+        try {
+            boolean loopFound = false;
+            boolean openingBraceFound = false;
+            boolean loopDeclared = false;
+
+            // Scan each line in the file
+            for (int lineNum = 0; lineNum < fileContents.size(); lineNum++ ) {
+                String line = fileContents.get(lineNum);
+                // Check for 'for (', 'while (', and 'do {'
+                if (line.contains("for (") || line.contains("while (") || line.contains("do {")) {
+                    loopFound = true;
+                    loopDeclared = true;
+                    
+                    if (line.contains("{")) {
+                        openingBraceFound = true;
+                    } else if (loopFound && !fileContents.get(lineNum+1).contains("{"))
+                    {
+                    	fileContents.set(lineNum, line + "{");
+                    }
+                    
+                    if (!fileContents.get(lineNum+1).contains("}")
+                    	&& !fileContents.get(lineNum+2).contains("}")
+                    	&& !fileContents.get(lineNum+3).contains("}"))
+                    {
+                    	fileContents.add(lineNum+3,
+                    			"}");
+                    }
+                }
             }
 
             // Write the fixed code back to the same file
-            FileWriter fileWriter = new FileWriter(filePath);
-            fileWriter.write(fixedCode.toString());
+            FileWriter fileWriter = new FileWriter("TeamSQL/outputForLoops.txt");
+            for (String line : fileContents)
+            {
+            	fileWriter.write(line + System.lineSeparator());
+            }
             fileWriter.close();
 
-            // Print the fixed code
-            System.out.println(fixedCode);
-
-            // Print the number of loops found
-            System.out.println("Number of loops found: " + loopCount);
         } catch (FileNotFoundException e) {
             System.out.println("File not found.");
             e.printStackTrace();
@@ -67,5 +75,7 @@ public class loopCount {
             System.out.println("Error writing to the file.");
             e.printStackTrace();
         }
+        
+        return fileContents;
     }
 }
