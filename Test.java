@@ -64,15 +64,16 @@ public class Test
 		for (int i = 1; i <= allProfiles.getLength(); i++)
 		{
 			allProfiles.getEntry(i).display();
-			System.out.println("Check if it counts this public ");
+			System.out.println("Check if it counts this public "); // Check if it counts this public in in-line comment
 		} // end for
 	} // end display
 
 	/* Check if it
 	 * count this
-	 * public
+	 * public inside
+	 * multiple-line comment
 	 */
 
-// Check if it counts this public
+// Check if it counts this public in single line comment
 
 } // end ProfileManager
