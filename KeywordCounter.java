@@ -12,7 +12,7 @@ import java.util.Scanner;
 public class KeywordCounter {
     public static void main(String[] args) {
         // Add the file path  
-        String filePath = "TeamSQL/Test.java";
+        String filePath = "wholeTest.txt";
         // Scan and split the files in to an ArrayList
         ArrayList<String> lines = readFile(filePath);
         // Calling method 
@@ -63,10 +63,13 @@ public class KeywordCounter {
                     if (word.equals("//")) {
                         break; // Skip the rest of the line
 
-                    } else if (word.equals("/*")) {
+                    } else if (word.startsWith("/*")) {
                         inComment = true; // Start of multiple-line comments
+                    
+                    } else if (word.startsWith("*")) {
+                        inComment = true; // Still in the multiple-line comments
 
-                    } else if (word.equals("*/")) {
+                    } else if (word.endsWith("*/")) {
                         inComment = false; // End of multiple-line comments
 
                     } else if (word.equals("\"")) {

@@ -78,6 +78,20 @@ class HelloWorld {
                            int number)
         {
             int innerStuff = 2;
-        
+            System.out.println("Check if it counts this public "); // Check if it counts this public in in-line comment
+		} // end for
+	} // end display
+
+	/* Check if it
+	 * count this
+	 * public inside 
+	 * multiple-line comment
+	 */
+
+     /* Check if it count this public */
+
+// Check if it counts this public in single line comment
+
+} // end ProfileManager
+
     }
-}
